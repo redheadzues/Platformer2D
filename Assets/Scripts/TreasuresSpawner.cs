@@ -8,7 +8,6 @@ public class TreasuresSpawner : MonoBehaviour
     [SerializeField] private Treasure _template;
 
     private Transform[] _spawnPoints;
-    private float _runningTime;
 
     void Start()
     {
@@ -18,10 +17,10 @@ public class TreasuresSpawner : MonoBehaviour
 
     private IEnumerator SpawnTreasure(int frequency)
     {
-        while(frequency > 0)
-        {            
-            var waitingTime = new WaitForSeconds(frequency);
+        var waitingTime = new WaitForSeconds(frequency);
 
+        while (true)
+        {         
             Transform currentSpawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
 
             if (currentSpawnPoint.childCount == 0)

@@ -14,17 +14,17 @@ public class EnemyPatroller : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private float _runningTime;
     private SpriteRenderer _renderer;
-    
+
     private void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<SpriteRenderer>();
-        StartCoroutine(Movement());
+        StartCoroutine(Move());
     }
 
-    private IEnumerator Movement()
+    private IEnumerator Move()
     {
-        while(true)
+        while (true)
         {
             _runningTime += Time.deltaTime;
 
@@ -37,7 +37,7 @@ public class EnemyPatroller : MonoBehaviour
             {
                 _rigidbody2D.velocity = transform.right * _speed;
                 _renderer.flipX = true;
-            }                
+            }
 
             if (_runningTime > _timeToChangeDirection * 2)
                 _runningTime = 0;

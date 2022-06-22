@@ -13,8 +13,8 @@ public class PlayerMovement : MonoBehaviour
     private Animator _animator;
     private SpriteRenderer _renderer;
     private float _currentSpeed;
-    private const string _playerSpeed = "speed";
-
+    private static int _playerSpeed = Animator.StringToHash("Speed");
+    
     private void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -25,12 +25,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-     
+        _animator.SetFloat(_playerSpeed, _currentSpeed);
+
         if (Input.GetKey(KeyCode.D))
         {
             _currentSpeed = _speed * Time.deltaTime;
-            transform.Translate(_currentSpeed, 0, 0);
-            _animator.SetFloat(_playerSpeed, _currentSpeed);
+            transform.Translate(_currentSpeed, 0, 0);            
             _renderer.flipX = false;
         }
 
@@ -38,13 +38,17 @@ public class PlayerMovement : MonoBehaviour
         {
             _currentSpeed = _speed * Time.deltaTime;
             transform.Translate(_currentSpeed * -1, 0, 0);
-            _animator.SetFloat(_playerSpeed, _currentSpeed);
             _renderer.flipX = true;
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             transform.Translate(0, 2, 0);
+        }
+
+        if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
+        {
+            _currentSpeed = 0;
         }
     }
 }
