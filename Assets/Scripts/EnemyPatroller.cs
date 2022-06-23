@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(BoxCollider2D))]
 
 public class EnemyPatroller : MonoBehaviour
 {
     [SerializeField] private float _speed;
-    [SerializeField] private float _timeToChangeDirection;
+    [SerializeField] private Transform _wayPoints;
 
-    private Rigidbody2D _rigidbody2D;
-    private float _runningTime;
     private SpriteRenderer _renderer;
+    private Transform[] _points;
+    private int _currentPoint;
 
     private void Start()
     {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<SpriteRenderer>();
+
+        _points = new Transform[_wayPoints.childCount];
+
+        for (int i = 0; i < _wayPoints.childCount; i++)
+        {
+            _points[i] = _wayPoints.GetChild(i);
+        }
+
         StartCoroutine(Move());
     }
 
@@ -26,22 +31,21 @@ public class EnemyPatroller : MonoBehaviour
     {
         while (true)
         {
-            _runningTime += Time.deltaTime;
+            Transform targetPoint = _points[_currentPoint];
 
-            if (_runningTime < _timeToChangeDirection)
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, _speed * Time.deltaTime);
+
+            if(transform.position == targetPoint.position)
             {
-                _rigidbody2D.velocity = -transform.right * _speed;
-                _renderer.flipX = false;
+                _currentPoint++;
+                
+                if(_currentPoint == _points.Length)
+                {
+                    _currentPoint = 0;
+                }
             }
-            else
-            {
-                _rigidbody2D.velocity = transform.right * _speed;
-                _renderer.flipX = true;
-            }
-
-            if (_runningTime > _timeToChangeDirection * 2)
-                _runningTime = 0;
-
+           
             yield return null;
         }
     }

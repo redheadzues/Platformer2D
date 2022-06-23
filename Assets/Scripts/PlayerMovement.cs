@@ -23,22 +23,34 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody2D.freezeRotation = true;
     }
 
+    private void SetPlayerMoveParametrs(float speed, bool isFlip)
+    {
+        _currentSpeed = speed * Time.deltaTime;
+        _renderer.flipX = isFlip;
+        _animator.SetFloat(_playerSpeed, _currentSpeed);        
+    }
+
     private void Update()
     {
-        _animator.SetFloat(_playerSpeed, _currentSpeed);
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            SetPlayerMoveParametrs(_speed, false);
+        }
 
         if (Input.GetKey(KeyCode.D))
-        {
-            _currentSpeed = _speed * Time.deltaTime;
-            transform.Translate(_currentSpeed, 0, 0);            
-            _renderer.flipX = false;
+        {                       
+           transform.Translate(_currentSpeed, 0, 0);
         }
 
         if(Input.GetKey(KeyCode.A))
         {
-            _currentSpeed = _speed * Time.deltaTime;
+            SetPlayerMoveParametrs(_speed, true);
+        }
+
+        if(Input.GetKey(KeyCode.A))
+        {
             transform.Translate(_currentSpeed * -1, 0, 0);
-            _renderer.flipX = true;
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
@@ -48,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
         {
-            _currentSpeed = 0;
+            SetPlayerMoveParametrs(0, false);
         }
     }
 }
